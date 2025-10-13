@@ -72,27 +72,31 @@ st.title("Algorithm Visualizer — Web Demo")
 with st.sidebar:
     st.header("⚙️ Controls")
     algo_name = st.selectbox("Algorithm", list(ALGOS.keys()) + ["Binary Search"])
-    st.markdown("**Array input (required)**")
-    arr_text = st.text_input("Enter numbers separated by commas", "5,2,4,1,3")
-
+    
+    # === FORM FOR ARRAY INPUT + VISUALIZATION ===
+    with st.form("array_visualizer_form"):
+        st.markdown("**Array input (required)**")
+        arr_text = st.text_input("Enter numbers separated by commas", "5,2,4,1,3")
+        visualize = st.form_submit_button("🔍 Visualize!")
+    
     try:
         arr = [int(x.strip()) for x in arr_text.split(",") if x.strip() != '']
     except Exception:
         st.error("Invalid array - use comma separated integers")
         arr = []
     st.write(f"Array size: {len(arr)}")
-
+    
     if algo_name == "Binary Search":
         target = st.number_input("Target value", value=arr[0] if arr else 0)
-
-    # Color pickers with emoji-enhanced labels
-    bar_color = st.color_picker("🎨 Choose bar color", "#4169E1")  # Default Royal Blue
-    highlight_color = st.color_picker("✨ Choose highlight color", "#FF7F0E")  # Default Orange
-
+    
+    # Color pickers
+    bar_color = st.color_picker("🎨 Choose bar color", "#4169E1")
+    highlight_color = st.color_picker("✨ Choose highlight color", "#FF7F0E")
+    
     base_delay_ms = 160
     if 'multiplier' not in st.session_state:
         st.session_state.multiplier = 2
-
+    
     col_a, col_b, col_c = st.columns([1, 1, 2])
     with col_a:
         if st.button("⏮ Speed -"):
@@ -102,16 +106,15 @@ with st.sidebar:
             st.session_state.multiplier = st.session_state.multiplier * 4
     with col_c:
         st.write("Current multiplier:", f"{st.session_state.multiplier}x")
-
+    
     preset_cols = st.columns([1, 1, 1, 1])
     presets = [1, 2, 4, 8]
     for pc, val in zip(preset_cols, presets):
         with pc:
             if st.button(f"{val}x"):
                 st.session_state.multiplier = val
-
     multiplier = st.session_state.multiplier
-
+    
     st.markdown("---")
     st.write("▶️ Playback")
     if 'playing' not in st.session_state:
@@ -120,20 +123,17 @@ with st.sidebar:
         st.session_state.frames = []
     if 'idx' not in st.session_state:
         st.session_state.idx = 0
-
-    if st.button("📝 Generate frames"):
-        if not arr:
-            st.warning("Provide a valid array first.")
-            st.session_state.frames = []
+    
+    # === FRAME GENERATION NOW LINKED TO FORM SUBMISSION ===
+    if visualize:
+        algo_func = visualizer.get_algorithm(algo_name)
+        if algo_name == "Binary Search":
+            st.session_state.frames = list(algo_func(sorted(arr), int(target)))
         else:
-            algo_func = visualizer.get_algorithm(algo_name)
-            if algo_name == "Binary Search":
-                st.session_state.frames = list(algo_func(sorted(arr), int(target)))
-            else:
-                st.session_state.frames = list(algo_func(arr))
+            st.session_state.frames = list(algo_func(arr))
         st.session_state.idx = 0
         st.session_state.playing = False
-
+    
     c1, c2, c3 = st.columns([1, 1, 1])
     with c1:
         if st.button("▶ Play"):
@@ -145,12 +145,11 @@ with st.sidebar:
         if st.button("⏭ Step"):
             st.session_state.playing = False
             st.session_state.idx = min(st.session_state.idx + 1, max(len(st.session_state.frames) - 1, 0))
-
+    
     if st.button("🔄 Reset"):
         st.session_state.idx = 0
         st.session_state.playing = False
-
-    # Visual progress bar reflecting current frame with emoji label
+    
     total_frames = max(len(st.session_state.frames), 1)
     progress_val = st.session_state.idx / total_frames
     st.progress(progress_val)
