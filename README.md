@@ -12,11 +12,10 @@
   <p>
     A minimal, extensible Python Algorithm Visualizer with a Streamlit web UI, perfect for learning and teaching.
   </p>
-  
-  <a href="https://github.com/your-username/your-repo/stargazers">
+  <a href="https://github.com/tanishq2520/Algo-Visualizer.git/stargazers">
     <img src="https://img.shields.io/github/stars/your-username/your-repo?style=for-the-badge" />
   </a>
-  <a href="#">
+  <a href="https://hacktoberfest.com/">
     <img src="https://img.shields.io/badge/Hacktoberfest-2025-blue?style=for-the-badge" />
   </a>
 
@@ -24,13 +23,13 @@
 
 ---
 
-### ## 📝 Project Overview
+### 📝 Project Overview
 
 This repository contains simple Python implementations of common algorithms (sorting, searching, and pathfinding) along with visualizers to see them in action. The project uses Streamlit to provide an interactive web UI for easy demonstration. It's designed for **learning, teaching, and experimentation** and is a beginner-friendly project for Hacktoberfest!
 
 ---
 
-### ## ✨ Features
+### ✨ Features
 
 * Lightweight algorithm implementations with generator-based frame output for visualization.
 * Interactive web demo built with Streamlit (`main.py`).
@@ -40,7 +39,7 @@ This repository contains simple Python implementations of common algorithms (sor
 
 ---
 
-### ## 🧠 Algorithms Implemented
+### 🧠 Algorithms Implemented
 
 This project visually demonstrates the following algorithms:
 
@@ -56,7 +55,7 @@ This project visually demonstrates the following algorithms:
 
 ---
 
-### ## 🚀 Live Demo
+### 🚀 Live Demo
 
 🚧 *Coming Soon* — stay tuned for the hosted Streamlit demo link!  
 
@@ -64,7 +63,7 @@ This project visually demonstrates the following algorithms:
 
 ---
 
-### ## 🎬 Demo Preview  
+### 🎬 Demo Preview  
 
 Here's a quick look at the visualizer in action:
 
@@ -74,7 +73,7 @@ Here's a quick look at the visualizer in action:
 
 ---
 
-### ## 🛠️ Installation & How to Run Locally
+### 🛠️ Installation & How to Run Locally
 
 Follow these steps to get the project running on your local machine.
 
@@ -111,29 +110,31 @@ Follow these steps to get the project running on your local machine.
 
 ---
 
-### ## 🧠 Project Layout
+### Project Layout
 
-├── algorithms/       # Core algorithm implementations
-├── visualizers/      # Visualization helpers
-├── examples/         # CLI demos
-├── tests/            # Unit tests
-├── docs/roadmap.md   # Contribution guide & roadmap
-├── main.py           # Streamlit app
-└── requirements.txt  # Dependencies
+- `algorithms/` - Core algorithm implementations
+- `visualizers/` - Visualization helpers
+- `examples/` - CLI demos
+- `tests/` - Unit tests
+- `docs/roadmap.md` - Contribution guide & roadmap
+- `main.py` - Streamlit app
+- `requirements.txt` - Dependencies
 
-### ## 🧩 How It Works
+### How It Works
 
-Each algorithm yields "frames" for visualization:
+Each algorithm yields "frames" for visualization. For example:
+
+```json
 {
-    'state': [5, 2, 4, 1, 3],
-    'highlight': (i, j),
-    'info': 'Comparing index i and j'
+  'state': [5, 2, 4, 1, 3],
+  'highlight': [0, 3],
+  'info': 'Comparing index i and j'
 }
-The Streamlit app renders these frames as bar charts, with playback speed adjustable by slider.
+```
 
 ---
 
-### ## 🙌 How to Contribute
+### 🙌 How to Contribute
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**. Don't forget to give the project a star! ⭐
 
@@ -143,7 +144,7 @@ Contributions are what make the open-source community such an amazing place to l
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
-### ## 📜 License
+### 📜 License
 
 This project is open-source. See LICENSE for details.
 
