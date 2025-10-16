@@ -13,7 +13,7 @@
     A minimal, extensible Python Algorithm Visualizer with a Streamlit web UI, perfect for learning and teaching.
   </p>
   <a href="https://github.com/tanishq2520/Algo-Visualizer.git/stargazers">
-    <img src="https://img.shields.io/github/stars/your-username/your-repo?style=for-the-badge" />
+    <img src="https://img.shields.io/github/stars/tanishq2520/Algo-Visualizer.git?style=for-the-badge" />
   </a>
   <a href="https://hacktoberfest.com/">
     <img src="https://img.shields.io/badge/Hacktoberfest-2025-blue?style=for-the-badge" />
@@ -35,7 +35,7 @@ This repository contains simple Python implementations of common algorithms (sor
 * Interactive web demo built with Streamlit (`main.py`).
 * Example CLI/demo scripts under the `examples/` directory.
 * A small test suite for core algorithms using Pytest.
-* Beginner-friendly and Hacktoberfest ready! 🎃
+* Beginner-friendly and Hacktoberfest ready! 
 
 ---
 
@@ -124,7 +124,7 @@ Follow these steps to get the project running on your local machine.
 
 Each algorithm yields "frames" for visualization. For example:
 
-```json
+```bash
 {
   'state': [5, 2, 4, 1, 3],
   'highlight': [0, 3],
