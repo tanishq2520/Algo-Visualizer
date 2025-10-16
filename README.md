@@ -12,9 +12,6 @@
   <p>
     A minimal, extensible Python Algorithm Visualizer with a Streamlit web UI, perfect for learning and teaching.
   </p>
-  <a href="https://github.com/tanishq2520/Algo-Visualizer.git/stargazers">
-    <img src="https://img.shields.io/github/stars/tanishq2520/Algo-Visualizer.git?style=for-the-badge" />
-  </a>
   <a href="https://hacktoberfest.com/">
     <img src="https://img.shields.io/badge/Hacktoberfest-2025-blue?style=for-the-badge" />
   </a>
