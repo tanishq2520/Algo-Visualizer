@@ -22,16 +22,12 @@ def draw_state_fig(state, highlight=(), info="", bar_color="#4C78A8", highlight_
     """Draws a bar chart with axis labels, title, and highlight indices."""
     plt.style.use('seaborn-v0_8-darkgrid')
     fig, ax = plt.subplots(figsize=(9, 4))
-    # If state is a grid (list of lists), flatten for now
     if not isinstance(state, (list, tuple)) or (len(state) and isinstance(state[0], (list, tuple))):
-        # Fallback: show a simple text when non-list state
         ax.text(0.5, 0.5, str(state), ha='center', va='center')
         ax.set_xticks([])
         ax.set_yticks([])
     else:
-        # Updated colored bars: Replaced the gradient colors with a uniform color based on bar_color:
         bars = ax.bar(range(len(state)), state, color=bar_color, edgecolor='black')
-
         if highlight:
             for idx in (highlight if isinstance(highlight, (list, tuple)) else [highlight]):
                 if isinstance(idx, int) and 0 <= idx < len(bars):
@@ -41,11 +37,11 @@ def draw_state_fig(state, highlight=(), info="", bar_color="#4C78A8", highlight_
         ax.set_xticks(range(len(state)))
         ax.set_xlim(-0.5, max(len(state) - 0.5, 0.5))
         ax.set_ylim(0, max(state) * 1.1 if state else 1)
-        # annotate bar values for clarity
         for rect, val in zip(bars, state):
             height = rect.get_height()
             ax.annotate(f'{val}', xy=(rect.get_x() + rect.get_width() / 2, height),
-                        xytext=(0, 3), textcoords='offset points', ha='center', va='bottom', fontsize=8)
+                        xytext=(0, 3), textcoords='offset points',
+                        ha='center', va='bottom', fontsize=8)
     ax.set_title(info, fontsize=12)
     plt.tight_layout()
     return fig
@@ -57,69 +53,51 @@ st.title("Algorithm Visualizer — Web Demo")
 # Sidebar controls
 with st.sidebar:
     st.header("Controls")
-    
-    # Algorithm and input configuration form
     st.subheader("Configuration")
     with st.form("visualization_form"):
         algo_name = st.selectbox(
-            "🔧 Select Algorithm", 
+            "🔧 Select Algorithm",
             list(ALGOS.keys()) + ["Binary Search"],
             help="Choose the algorithm you want to visualize"
         )
-        
+
         st.markdown("**📝 Array Input**")
         arr_text = st.text_input(
-            "Enter numbers separated by commas", 
+            "Enter numbers separated by commas",
             value="5,2,4,1,3",
             placeholder="e.g., 5,2,4,1,3",
             help="Enter integers separated by commas"
         )
-        
-        # Additional input for binary search
+
         target = None
         if algo_name == "Binary Search":
-            target = st.number_input(
-                "🎯 Target value to search for", 
-                value=5,
-                help="The number you want to find in the array"
-            )
-        
-        # Submit button with better styling
+            target = st.number_input("🎯 Target value to search for", value=5)
+
         submitted = st.form_submit_button("🚀 Generate Visualization", use_container_width=True)
-        
-        # Process form submission with better error handling
+
         if submitted:
             try:
-                # Parse and validate array input
                 arr = [int(x.strip()) for x in arr_text.split(",") if x.strip() != '']
-                
                 if not arr:
                     st.error("❌ Please enter at least one number")
                 elif len(arr) > 50:
                     st.error("❌ Array too large! Please use 50 or fewer elements")
                 else:
-                    # Generate algorithm frames
                     with st.spinner(f"Generating {algo_name} visualization..."):
                         if algo_name == "Binary Search":
-                            # Sort array for binary search
                             sorted_arr = sorted(arr)
                             st.info(f"🔄 Array sorted for binary search: {sorted_arr}")
                             st.session_state.frames = list(binary_search(sorted_arr, int(target)))
                         else:
                             st.session_state.frames = list(ALGOS[algo_name](arr.copy()))
-                        
-                        # Reset playback state
                         st.session_state.idx = 0
                         st.session_state.playing = False
-                        
                         st.success(f"✅ Generated {len(st.session_state.frames)} animation frames!")
-                        
             except ValueError:
                 st.error("❌ Invalid input! Please enter only integers separated by commas")
             except Exception as e:
                 st.error(f"❌ An error occurred: {str(e)}")
-    
-    # Display array info outside form
+
     try:
         arr = [int(x.strip()) for x in arr_text.split(",") if x.strip() != '']
         if arr:
@@ -131,15 +109,11 @@ with st.sidebar:
         st.error("❌ Invalid array format - use comma separated integers")
         arr = []
 
-    # Speed control configuration
     st.subheader("Playback Speed")
-    base_delay_ms = 500  # Base delay in milliseconds
-    
-    # Initialize speed multiplier in session state
+    base_delay_ms = 500
     if 'multiplier' not in st.session_state:
         st.session_state.multiplier = 1
-    
-    # Speed adjustment buttons
+
     speed_cols = st.columns([1, 1])
     with speed_cols[0]:
         if st.button("🐌 Slower"):
@@ -147,11 +121,8 @@ with st.sidebar:
     with speed_cols[1]:
         if st.button("🚀 Faster"):
             st.session_state.multiplier = min(16, st.session_state.multiplier * 2)
-    
-    # Current speed display
     st.write(f"**Speed:** {st.session_state.multiplier}x")
-    
-    # Speed presets
+
     st.write("**Quick Presets:**")
     preset_cols = st.columns(4)
     presets = [0.5, 1, 2, 4]
@@ -160,8 +131,7 @@ with st.sidebar:
             if st.button(f"{speed_val}x", key=f"preset_{i}"):
                 st.session_state.multiplier = speed_val
     st.markdown("---")
-    
-    # Initialize session state variables
+
     if 'playing' not in st.session_state:
         st.session_state.playing = False
     if 'frames' not in st.session_state:
@@ -169,23 +139,19 @@ with st.sidebar:
     if 'idx' not in st.session_state:
         st.session_state.idx = 0
 
-   # Personalization
     st.subheader("Colors")
     if "bar_color" not in st.session_state:
-        st.session_state.bar_color = "#4C78A8"  # default bars
+        st.session_state.bar_color = "#4C78A8"
     if "highlight_color" not in st.session_state:
-        st.session_state.highlight_color = "#EE994F"  # default highlight
+        st.session_state.highlight_color = "#EE994F"
 
     st.session_state.bar_color = st.color_picker("Choose bar color", value=st.session_state.bar_color)
     st.session_state.highlight_color = st.color_picker("Choose highlight color", value=st.session_state.highlight_color)
 
-    
-    # Animation status indicator
     if st.session_state.frames:
         status = "🔴 Playing..." if st.session_state.playing else "⏸️ Paused"
         st.markdown(f"**Status:** {status}")
-    
-    # Playback control buttons
+
     control_cols = st.columns(4)
     with control_cols[0]:
         play_disabled = not st.session_state.frames or st.session_state.idx >= len(st.session_state.frames) - 1
@@ -205,48 +171,37 @@ with st.sidebar:
             st.session_state.idx = 0
             st.session_state.playing = False
 
-    # Progress indicator (moved to main area)
     if not st.session_state.frames:
         st.info("🎬 Generate visualization frames to start animation")
 
-# Main visualization display area
+# === Main visualization area ===
 st.header("Visualization")
 
-# Progress bar container (above the graph)
 progress_container = st.container()
 graph_container = st.container()
 
+
 def update_progress_bar():
-    """Update the progress bar with current frame information."""
     if st.session_state.frames:
         total_frames = len(st.session_state.frames)
         current_frame = st.session_state.idx + 1
         progress_value = st.session_state.idx / max(total_frames - 1, 1)
         percentage = int(progress_value * 100)
-        
         with progress_container:
-            # Progress header with percentage
             st.markdown(f"### 📊 Progress: {percentage}%")
-            
-            # Progress bar with frame counter
             prog_col1, prog_col2 = st.columns([5, 1])
             with prog_col1:
                 st.progress(progress_value)
             with prog_col2:
                 st.metric("Frame", f"{current_frame}/{total_frames}")
-            
-            # Current step information
-            if st.session_state.frames and 0 <= st.session_state.idx < len(st.session_state.frames):
+            if 0 <= st.session_state.idx < len(st.session_state.frames):
                 current_info = st.session_state.frames[st.session_state.idx].get('info', 'Algorithm Step')
-                st.info(f"� **Current Step:** {current_info}")
-            
-            st.markdown("---")  # Visual separator
+                st.info(f"🔹 **Current Step:** {current_info}")
+            st.markdown("---")
+
 
 def render_frame_at(i: int):
-    """Render the visualization frame at the given index."""
-    # Update progress bar first
     update_progress_bar()
-    
     if st.session_state.frames and 0 <= i < len(st.session_state.frames):
         try:
             frame = st.session_state.frames[i]
@@ -257,7 +212,6 @@ def render_frame_at(i: int):
                 bar_color=st.session_state.get("bar_color", "#4C78A8"),
                 highlight_color=st.session_state.get("highlight_color", "#EE994F"),
             )
-
             with graph_container:
                 st.pyplot(fig)
             plt.close(fig)
@@ -268,26 +222,21 @@ def render_frame_at(i: int):
         with progress_container:
             st.info("🎯 Select an algorithm and click 'Visualize!' to see the animation")
 
-# Display current frame or welcome message
+
 render_frame_at(st.session_state.idx)
 
-# Auto-advancing playback with smooth progress updates
+# === Auto-play logic with celebration 🎉 ===
 if st.session_state.playing and st.session_state.frames:
-    # Compute delay in seconds
     delay = max(0.1, base_delay_ms / (1000.0 * st.session_state.multiplier))
-    
-    # Auto-advance to next frame
     if st.session_state.idx < len(st.session_state.frames) - 1:
-        # Wait for the specified delay
         time.sleep(delay)
-        # Advance to next frame
         st.session_state.idx += 1
-        # Trigger rerun to update display
         st.rerun()
     else:
-        # Animation completed
+        # 🎉 Animation completed!
         st.session_state.playing = False
         st.session_state.idx = len(st.session_state.frames) - 1
         with st.sidebar:
             st.success("🎉 Animation Complete!")
         st.toast("✅ Array sorted successfully! 🎉")
+        st.balloons()  # 🎈 Celebration effect here!
