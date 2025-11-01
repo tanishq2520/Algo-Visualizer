@@ -21,10 +21,8 @@ ALGOS = {
 def draw_state_fig(state, highlight=(), info="", bar_color="#4C78A8", highlight_color="#EE994F"):
     """Draws a bar chart with axis labels, title, and highlight indices."""
     plt.style.use('seaborn-v0_8-darkgrid')
-    fig, ax = plt.subplots(figsize=(9, 4))
-    # If state is a grid (list of lists), flatten for now
+    fig, ax = plt.subplots(figsize=(10, 3))
     if not isinstance(state, (list, tuple)) or (len(state) and isinstance(state[0], (list, tuple))):
-        # Fallback: show a simple text when non-list state
         ax.text(0.5, 0.5, str(state), ha='center', va='center')
         ax.set_xticks([])
         ax.set_yticks([])
@@ -41,20 +39,42 @@ def draw_state_fig(state, highlight=(), info="", bar_color="#4C78A8", highlight_
         ax.set_xticks(range(len(state)))
         ax.set_xlim(-0.5, max(len(state) - 0.5, 0.5))
         ax.set_ylim(0, max(state) * 1.1 if state else 1)
-        # annotate bar values for clarity
         for rect, val in zip(bars, state):
             height = rect.get_height()
             ax.annotate(f'{val}', xy=(rect.get_x() + rect.get_width() / 2, height),
                         xytext=(0, 3), textcoords='offset points', ha='center', va='bottom', fontsize=8)
-    ax.set_title(info, fontsize=12)
     plt.tight_layout()
     return fig
 
-
 st.set_page_config(page_title="Algorithm Visualizer", layout="wide")
-st.title("Algorithm Visualizer — Web Demo")
+if 'algo_name' not in st.session_state:
+    st.session_state.algo_name = "Bubble Sort"
+st.title(f"Algorithm Visualizer — {st.session_state.algo_name}")
 
-# Sidebar controls
+# --- UI STATE DEFAULTS ---
+if 'setup_visible' not in st.session_state:
+    st.session_state.setup_visible = True
+if 'manual_arr_text' not in st.session_state:
+    st.session_state.manual_arr_text = "5,2,4,1,3"
+if 'rand_size' not in st.session_state:
+    st.session_state.rand_size = 10
+if 'rand_seed' not in st.session_state:
+    st.session_state.rand_seed = int(time.time())
+if 'rand_array' not in st.session_state:
+    st.session_state.rand_array = []
+if 'playing' not in st.session_state:
+    st.session_state.playing = False
+if 'frames' not in st.session_state:
+    st.session_state.frames = []
+if 'idx' not in st.session_state:
+    st.session_state.idx = 0
+if 'speed_mult' not in st.session_state:
+    st.session_state.speed_mult = 1.0
+if 'input_method' not in st.session_state:
+    st.session_state.input_method = "Manual Input"
+
+
+# --- SIDEBAR CONTROLS ---
 with st.sidebar:
     st.header("Controls")
     
